@@ -13,7 +13,7 @@ function ReopenTaskModal({ task, onClose, onReopened }) {
 
         const { error: historyError } = await supabase.from('task_history').insert({
             task_id: task.id,
-            description: `Dibuka kembali: ${reason}`,
+            description: `Reopened: ${reason}`,
             image_url: null,
         })
 
@@ -48,20 +48,21 @@ function ReopenTaskModal({ task, onClose, onReopened }) {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center gap-2 mb-1">
-                    <span className="w-2 h-2 rounded-full bg-orange-400" />
-                    <h2 className="text-base font-semibold text-gray-900">Buka Kembali Tugas</h2>
+                    <span className="w-2 h-2 rounded-full bg-blue-600" />
+                    <h2 className="text-base font-semibold text-gray-900">Reopen Task</h2>
                 </div>
                 <p className="text-sm text-gray-500 mb-5 ml-4">{task.name}</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                            Kenapa dibuka lagi?
+                            Reason for reopening
                         </label>
                         <textarea
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
-                            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-orange-300"
+                            placeholder="Explain why this task is being moved back to To Do..."
+                            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
                             rows={3}
                             required
                             autoFocus
@@ -72,16 +73,16 @@ function ReopenTaskModal({ task, onClose, onReopened }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                            className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium"
                         >
-                            Batal
+                            Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={saving}
-                            className="px-4 py-2 text-sm rounded-lg bg-orange-500 text-white font-medium hover:bg-orange-600 disabled:opacity-50"
+                            className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
                         >
-                            {saving ? 'Menyimpan...' : 'Buka Kembali'}
+                            {saving ? 'Saving...' : 'Reopen Task'}
                         </button>
                     </div>
                 </form>

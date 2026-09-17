@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-function AddTaskModal({ onClose, onTaskAdded }) {
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
+function CompleteUpdateModal({ update, onClose, onCompleted }) {
+    const [changeDescription, setChangeDescription] = useState('')
     const [imageFile, setImageFile] = useState(null)
     const [saving, setSaving] = useState(false)
 
     async function handleSubmit(e) {
         e.preventDefault()
-        if (!name.trim()) return
+        if (!changeDescription.trim()) return
 
         setSaving(true)
         let imageUrl = null
@@ -35,20 +34,49 @@ function AddTaskModal({ onClose, onTaskAdded }) {
             imageUrl = publicUrlData.publicUrl
         }
 
-        const { error } = await supabase.from('tasks').insert({
-            name,
-            description: description || null,
-            image_url: imageUrl,
-            status: 'todo',
-        })
+        // 1. Insert note into tasks table with status 'done'
+        const { data: newTask, error: taskError } = await supabase
+            .from('tasks')
+            .insert({
+                name: update.title,
+                description: update.description,
+                image_url: null,
+                status: 'done',
+            })
+            .select()
+            .single()
 
-        setSaving(false)
-        if (error) {
-            console.error('Insert error:', error)
+        if (taskError) {
+            console.error('Insert task error:', taskError)
+            setSaving(false)
             return
         }
 
-        onTaskAdded()
+        // 2. Add change history to task_history
+        const { error: historyError } = await supabase.from('task_history').insert({
+            task_id: newTask.id,
+            description: changeDescription,
+            image_url: imageUrl,
+        })
+
+        if (historyError) {
+            console.error('History insert error:', historyError)
+            setSaving(false)
+            return
+        }
+
+        // 3. Delete note from changes
+        const { error: deleteError } = await supabase
+            .from('changes')
+            .delete()
+            .eq('id', update.id)
+
+        setSaving(false)
+        if (deleteError) {
+            console.error('Delete change error:', deleteError)
+        }
+
+        onCompleted()
         onClose()
     }
 
@@ -61,22 +89,23 @@ function AddTaskModal({ onClose, onTaskAdded }) {
                 className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8 w-full max-w-2xl max-h-[85vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="flex items-center gap-2 mb-5">
-                    <span className="w-2 h-2 rounded-full bg-orange-400" />
-                    <h2 className="text-base font-semibold text-gray-900">Add Task</h2>
+                <div className="flex items-center gap-2 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-purple-400" />
+                    <h2 className="text-base font-semibold text-gray-900">Complete Note to Done</h2>
                 </div>
+                <p className="text-sm text-gray-500 mb-5 ml-4">{update.title}</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                            Task Title
+                            What changed / Completion notes
                         </label>
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="e.g. Implement authentication flow"
+                        <textarea
+                            value={changeDescription}
+                            onChange={(e) => setChangeDescription(e.target.value)}
+                            placeholder="Describe what was accomplished..."
                             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
+                            rows={3}
                             required
                             autoFocus
                         />
@@ -84,20 +113,7 @@ function AddTaskModal({ onClose, onTaskAdded }) {
 
                     <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                            Description (optional)
-                        </label>
-                        <textarea
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Provide any additional context or details..."
-                            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
-                            rows={3}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                            Attachment Image (optional)
+                            Proof / Attachment Image (optional)
                         </label>
                         <input
                             type="file"
@@ -120,7 +136,7 @@ function AddTaskModal({ onClose, onTaskAdded }) {
                             disabled={saving}
                             className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
                         >
-                            {saving ? 'Saving...' : 'Save Task'}
+                            {saving ? 'Saving...' : 'Mark as Done'}
                         </button>
                     </div>
                 </form>
@@ -129,4 +145,4 @@ function AddTaskModal({ onClose, onTaskAdded }) {
     )
 }
 
-export default AddTaskModal
+export default CompleteUpdateModal

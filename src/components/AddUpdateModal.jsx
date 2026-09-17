@@ -38,18 +38,19 @@ function AddUpdateModal({ onClose, onAdded }) {
             >
                 <div className="flex items-center gap-2 mb-5">
                     <span className="w-2 h-2 rounded-full bg-purple-400" />
-                    <h2 className="text-base font-semibold text-gray-900">Tambah Update</h2>
+                    <h2 className="text-base font-semibold text-gray-900">Add Note</h2>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                            Judul
+                            Title
                         </label>
                         <input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
+                            placeholder="e.g. Discuss roadmap with design team"
                             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-300"
                             required
                             autoFocus
@@ -58,11 +59,12 @@ function AddUpdateModal({ onClose, onAdded }) {
 
                     <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                            Deskripsi (opsional)
+                            Description (optional)
                         </label>
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Provide any additional thoughts or notes..."
                             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-300"
                             rows={3}
                         />
@@ -72,16 +74,16 @@ function AddUpdateModal({ onClose, onAdded }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                            className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium"
                         >
-                            Batal
+                            Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={saving}
                             className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
                         >
-                            {saving ? 'Menyimpan...' : 'Simpan'}
+                            {saving ? 'Saving...' : 'Save Note'}
                         </button>
                     </div>
                 </form>

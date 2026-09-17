@@ -10,24 +10,24 @@ function ConfirmDeleteModal({ taskName, onCancel, onConfirm, deleting }) {
             >
                 <div className="flex items-center gap-2 mb-3">
                     <span className="w-2 h-2 rounded-full bg-red-500" />
-                    <h2 className="text-base font-semibold text-gray-900">Hapus Tugas</h2>
+                    <h2 className="text-base font-semibold text-gray-900">Delete Task</h2>
                 </div>
                 <p className="text-sm text-gray-500 mb-6">
-                    Yakin ingin menghapus <span className="font-medium text-gray-700">{taskName}</span>? Tindakan ini tidak bisa dibatalkan, termasuk seluruh riwayatnya.
+                    Are you sure you want to delete <span className="font-medium text-gray-700">{taskName}</span>? This action cannot be undone, and all associated history will be permanently removed.
                 </p>
                 <div className="flex justify-end gap-2">
                     <button
                         onClick={onCancel}
-                        className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                        className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium"
                     >
-                        Batal
+                        Cancel
                     </button>
                     <button
                         onClick={onConfirm}
                         disabled={deleting}
                         className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 disabled:opacity-50"
                     >
-                        {deleting ? 'Menghapus...' : 'Ya, Hapus'}
+                        {deleting ? 'Deleting...' : 'Delete'}
                     </button>
                 </div>
             </div>

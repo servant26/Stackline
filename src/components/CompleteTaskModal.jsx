@@ -72,18 +72,19 @@ function CompleteTaskModal({ task, onClose, onCompleted }) {
             >
                 <div className="flex items-center gap-2 mb-1">
                     <span className="w-2 h-2 rounded-full bg-blue-600" />
-                    <h2 className="text-base font-semibold text-gray-900">Selesaikan Tugas</h2>
+                    <h2 className="text-base font-semibold text-gray-900">Complete Task</h2>
                 </div>
                 <p className="text-sm text-gray-500 mb-5 ml-4">{task.name}</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                            Apa yang berubah?
+                            What changed / Completion notes
                         </label>
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Describe what was accomplished..."
                             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
                             rows={3}
                             required
@@ -93,7 +94,7 @@ function CompleteTaskModal({ task, onClose, onCompleted }) {
 
                     <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                            Upload Gambar (opsional)
+                            Proof / Attachment Image (optional)
                         </label>
                         <input
                             type="file"
@@ -107,16 +108,16 @@ function CompleteTaskModal({ task, onClose, onCompleted }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                            className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium"
                         >
-                            Batal
+                            Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={saving}
                             className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
                         >
-                            {saving ? 'Menyimpan...' : 'Selesai'}
+                            {saving ? 'Saving...' : 'Mark as Done'}
                         </button>
                     </div>
                 </form>
