@@ -51,24 +51,19 @@ function GenerateModal({ onClose }) {
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
                             Periode
                         </label>
-                        <div className="flex gap-2">
-                            {[
-                                { value: 'today', label: 'Hari Ini' },
-                                { value: 'week', label: 'Minggu Ini' },
-                                { value: 'month', label: 'Bulan Ini' },
-                            ].map((opt) => (
-                                <button
-                                    key={opt.value}
-                                    type="button"
-                                    onClick={() => setPeriod(opt.value)}
-                                    className={`flex-1 px-3 py-2 text-sm rounded-lg border font-medium ${period === opt.value
-                                        ? 'bg-blue-600 border-blue-600 text-white'
-                                        : 'border-gray-200 text-gray-600 hover:bg-gray-50'
-                                        }`}
-                                >
-                                    {opt.label}
-                                </button>
-                            ))}
+                        <div className="relative">
+                            <select
+                                value={period}
+                                onChange={(e) => setPeriod(e.target.value)}
+                                className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 cursor-pointer"
+                            >
+                                <option value="today">Hari Ini</option>
+                                <option value="week">Minggu Ini</option>
+                                <option value="month">Bulan Ini</option>
+                            </select>
+                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                                ▼
+                            </span>
                         </div>
                     </div>
 
@@ -76,24 +71,19 @@ function GenerateModal({ onClose }) {
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
                             Status
                         </label>
-                        <div className="flex gap-2">
-                            {[
-                                { value: 'update', label: 'Update' },
-                                { value: 'todo', label: 'To Do' },
-                                { value: 'done', label: 'Done' },
-                            ].map((opt) => (
-                                <button
-                                    key={opt.value}
-                                    type="button"
-                                    onClick={() => setStatus(opt.value)}
-                                    className={`flex-1 px-3 py-2 text-sm rounded-lg border font-medium ${status === opt.value
-                                        ? 'bg-blue-600 border-blue-600 text-white'
-                                        : 'border-gray-200 text-gray-600 hover:bg-gray-50'
-                                        }`}
-                                >
-                                    {opt.label}
-                                </button>
-                            ))}
+                        <div className="relative">
+                            <select
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 cursor-pointer"
+                            >
+                                <option value="update">Update</option>
+                                <option value="todo">To Do</option>
+                                <option value="done">Done</option>
+                            </select>
+                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                                ▼
+                            </span>
                         </div>
                     </div>
 
