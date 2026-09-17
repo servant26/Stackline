@@ -48,20 +48,20 @@ function UpdateDetailModal({ update, onClose, onUpdated }) {
             onClick={onClose}
         >
             <div
-                className="bg-white rounded-2xl border border-gray-100 shadow-xl p-6 sm:p-7 w-full max-w-lg max-h-[85vh] overflow-y-auto"
+                className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xl p-6 sm:p-7 w-full max-w-lg max-h-[85vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header bar */}
-                <div className="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <div className="flex justify-between items-center mb-5 pb-3 border-b border-gray-100 dark:border-gray-800">
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-purple-400" />
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300">
                             Notes
                         </span>
                         {currentUpdate.created_at && (
                             <>
-                                <span className="text-gray-300">•</span>
-                                <span className="text-xs text-gray-500">
+                                <span className="text-gray-300 dark:text-gray-600">•</span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
                                     {new Date(currentUpdate.created_at).toLocaleDateString('en-US', {
                                         month: 'short',
                                         day: 'numeric',
@@ -76,7 +76,7 @@ function UpdateDetailModal({ update, onClose, onUpdated }) {
                             type="button"
                             onClick={() => setIsEditing(true)}
                             title="Edit Note"
-                            className="text-gray-400 hover:text-blue-600 p-1.5 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center"
+                            className="text-gray-400 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/50 transition-colors flex items-center justify-center"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -100,35 +100,35 @@ function UpdateDetailModal({ update, onClose, onUpdated }) {
                     <div className="space-y-5">
                         {/* Title */}
                         <div>
-                            <h2 className="text-lg font-bold text-gray-900 leading-snug">
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white leading-snug">
                                 {currentUpdate.title}
                             </h2>
                         </div>
 
                         {/* Description */}
                         <div>
-                            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                            <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
                                 Description
                             </h4>
                             {currentUpdate.description ? (
-                                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line text-justify">
+                                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-justify">
                                     {currentUpdate.description}
                                 </p>
                             ) : (
-                                <p className="text-sm text-gray-400 italic">No description provided.</p>
+                                <p className="text-sm text-gray-400 dark:text-gray-500 italic">No description provided.</p>
                             )}
                         </div>
 
                         {/* Attachment Image */}
                         {currentUpdate.image_url && (
                             <div>
-                                <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                                <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
                                     Attachment Image
                                 </h4>
                                 <img
                                     src={currentUpdate.image_url}
                                     alt={currentUpdate.title}
-                                    className="w-full max-h-64 object-cover rounded-xl border border-gray-100"
+                                    className="w-full max-h-64 object-cover rounded-xl border border-gray-100 dark:border-gray-800"
                                 />
                             </div>
                         )}
@@ -136,27 +136,27 @@ function UpdateDetailModal({ update, onClose, onUpdated }) {
                 ) : (
                     <form onSubmit={handleSaveEdit} className="w-full space-y-4">
                         <div>
-                            <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                            <label className="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
                                 Note Title :
                             </label>
                             <input
                                 type="text"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                className="w-full border border-gray-200 rounded-lg px-3.5 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-300"
+                                className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-3.5 py-2 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-100 dark:focus:ring-purple-900/50 focus:border-purple-300 dark:focus:border-purple-500"
                                 required
                                 autoFocus
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                            <label className="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
                                 Description :
                             </label>
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 rows={4}
-                                className="w-full border border-gray-200 rounded-lg px-3.5 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-300"
+                                className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-3.5 py-2 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-100 dark:focus:ring-purple-900/50 focus:border-purple-300 dark:focus:border-purple-500"
                                 placeholder="Add note description..."
                             />
                         </div>
@@ -164,14 +164,14 @@ function UpdateDetailModal({ update, onClose, onUpdated }) {
                             <button
                                 type="button"
                                 onClick={handleCancelEdit}
-                                className="px-4 py-2 text-xs rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium"
+                                className="px-4 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="px-5 py-2 text-xs rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50 shadow-sm"
+                                className="px-5 py-2 text-xs rounded-lg bg-blue-600 dark:bg-transparent dark:border dark:border-blue-500 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white text-white font-medium hover:bg-blue-700 disabled:opacity-50 shadow-xs transition-all"
                             >
                                 {saving ? 'Saving...' : 'Save Changes'}
                             </button>
