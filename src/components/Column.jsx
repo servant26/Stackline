@@ -39,15 +39,20 @@ function Column({ id, title, tasks, onTaskClick, onAddClick, addLabel, onDeleted
     return (
         <div
             ref={setNodeRef}
-            className={`bg-gray-50 dark:bg-gray-900/60 border border-transparent dark:border-gray-800/80 rounded-xl p-3 min-h-[300px] max-h-[calc(100vh-140px)] flex flex-col transition-colors ${
+            className={`bg-gray-50 dark:bg-gray-900/60 border border-transparent dark:border-gray-800/80 rounded-2xl md:rounded-xl p-3.5 md:p-3 md:min-h-[300px] md:max-h-[calc(100vh-140px)] flex flex-col transition-colors ${
                 isOver ? 'bg-blue-50 dark:bg-blue-950/40 ring-2 ring-blue-300 dark:ring-blue-600' : ''
             }`}
         >
-            <div className="flex items-center gap-2 mb-3 px-1 flex-shrink-0">
-                <span className={`w-2 h-2 rounded-full ${config.dot}`} />
-                <h2 className="font-semibold text-gray-800 dark:text-gray-100 text-sm">{title}</h2>
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${config.badge}`}>
-                    {tasks.length}
+            <div className="flex items-center justify-between mb-3 px-1 flex-shrink-0">
+                <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${config.dot}`} />
+                    <h2 className="font-semibold text-gray-800 dark:text-gray-100 text-sm sm:text-[13px] md:text-sm">{title}</h2>
+                    <span className={`text-xs sm:text-[11px] md:text-xs font-medium px-2 py-0.5 rounded-full ${config.badge}`}>
+                        {tasks.length}
+                    </span>
+                </div>
+                <span className="text-[11px] text-gray-400 dark:text-gray-500 md:hidden font-normal">
+                    Swipe cards →
                 </span>
             </div>
 
@@ -60,9 +65,10 @@ function Column({ id, title, tasks, onTaskClick, onAddClick, addLabel, onDeleted
                 </button>
             )}
 
-            <div className="overflow-y-auto flex-1 pr-1 space-y-2.5">
+            {/* Cards container: horizontal swipe on mobile, vertical overflow on md+ */}
+            <div className="flex md:flex-col gap-3 md:gap-0 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto flex-1 pb-2 md:pb-0 pr-0 md:pr-1 md:space-y-2.5 snap-x snap-mandatory md:snap-none no-scrollbar">
                 {tasks.length === 0 ? (
-                    <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-6">No tasks yet</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-6 w-full">No tasks yet</p>
                 ) : (
                     paginatedTasks.map((task) => (
                         <TaskCard

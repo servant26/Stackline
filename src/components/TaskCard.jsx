@@ -47,7 +47,7 @@ function TaskCard({ task, onClick, statusLabel, statusColor, onDeleted }) {
                 {...listeners}
                 {...attributes}
                 onClick={() => onClick?.(task)}
-                className={`rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 mb-3 shadow-sm hover:shadow-md transition-all cursor-grab ${
+                className={`rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 shadow-sm hover:shadow-md transition-all cursor-grab touch-manipulation flex-shrink-0 w-[82vw] sm:w-[320px] md:w-full md:mb-3 snap-center flex flex-col justify-between ${
                     isDragging ? 'opacity-25 border-dashed border-gray-300 dark:border-gray-700' : ''
                 }`}
             >
@@ -62,12 +62,12 @@ function TaskCard({ task, onClick, statusLabel, statusColor, onDeleted }) {
                     <img
                         src={task.image_url}
                         alt={task.name}
-                        className="w-full h-28 object-cover rounded-lg mb-2 pointer-events-none"
+                        className="w-full h-28 sm:h-32 md:h-28 object-cover rounded-lg mb-2 pointer-events-none"
                     />
                 )}
-                <p className="font-semibold text-gray-900 dark:text-white text-sm mb-1">{task.name}</p>
+                <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-[13px] md:text-sm mb-1">{task.name}</p>
                 {displayDescription && (
-                    <p className="text-gray-500 dark:text-gray-400 text-xs line-clamp-2">{displayDescription}</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-[11.5px] md:text-xs line-clamp-2">{displayDescription}</p>
                 )}
                 <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
                     <span className="text-[11px] text-gray-400 dark:text-gray-500">
