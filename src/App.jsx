@@ -192,6 +192,7 @@ function App() {
                 onTaskClick={setTaskToView}
                 onAddClick={() => setShowAddTaskModal(true)}
                 addLabel="Tambah Tugas"
+                onDeleted={fetchAll}
               />
               <Column
                 id="done"
@@ -200,6 +201,7 @@ function App() {
                 onTaskClick={setTaskToView}
                 onAddClick={() => setShowAddDoneModal(true)}
                 addLabel="Tambah Tugas"
+                onDeleted={fetchAll}
               />
             </div>
           </DndContext>

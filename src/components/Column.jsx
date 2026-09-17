@@ -6,7 +6,7 @@ const STATUS_CONFIG = {
     done: { label: 'Selesai', dot: 'bg-blue-600', badge: 'bg-blue-100 text-blue-700' },
 }
 
-function Column({ id, title, tasks, onTaskClick, onAddClick, addLabel }) {
+function Column({ id, title, tasks, onTaskClick, onAddClick, addLabel, onDeleted }) {
     const { setNodeRef, isOver } = useDroppable({ id })
     const config = STATUS_CONFIG[id] || { label: title, dot: 'bg-gray-400', badge: 'bg-gray-100 text-gray-600' }
 
@@ -43,6 +43,7 @@ function Column({ id, title, tasks, onTaskClick, onAddClick, addLabel }) {
                         onClick={onTaskClick}
                         statusLabel={config.label}
                         statusColor={config.dot}
+                        onDeleted={onDeleted}
                     />
                 ))
             )}

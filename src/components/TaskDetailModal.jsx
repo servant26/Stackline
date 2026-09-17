@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase'
 
 const PAGE_SIZE = 5
 
-function TaskDetailModal({ task, onClose }) {
+function TaskDetailModal({ task, onClose, onDeleted }) {
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
