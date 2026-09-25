@@ -30,7 +30,7 @@ function CustomSelect({ label, value, onChange, options }) {
     }, [])
 
     return (
-        <div className="relative" ref={selectRef}>
+        <div className="relative z-20" ref={selectRef}>
             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
                 {label}
             </label>
@@ -186,70 +186,43 @@ function GenerateModal({ tasks = [], updates = [], onClose }) {
             value: 'today',
             label: 'Today',
             count: filterByPeriod(currentStatusItems, 'today').length,
-            disabled: filterByPeriod(currentStatusItems, 'today').length === 0,
         },
         {
             value: 'week',
             label: 'This Week',
             count: filterByPeriod(currentStatusItems, 'week').length,
-            disabled: filterByPeriod(currentStatusItems, 'week').length === 0,
         },
         {
             value: 'month',
             label: 'This Month',
             count: filterByPeriod(currentStatusItems, 'month').length,
-            disabled: filterByPeriod(currentStatusItems, 'month').length === 0,
         },
     ]
 
-    // Dynamic Status Options (calculated across the selected period or overall)
+    // Dynamic Status Options
     const statusOptions = [
         {
             value: 'update',
             label: 'Notes',
             dot: 'bg-purple-400',
             count: filterByPeriod(updates, period).length,
-            disabled: filterByPeriod(updates, period).length === 0,
         },
         {
             value: 'todo',
             label: 'To Do',
             dot: 'bg-orange-400',
             count: filterByPeriod(tasks.filter((t) => t.status === 'todo'), period).length,
-            disabled: filterByPeriod(tasks.filter((t) => t.status === 'todo'), period).length === 0,
         },
         {
             value: 'done',
             label: 'Done',
             dot: 'bg-blue-600',
             count: filterByPeriod(tasks.filter((t) => t.status === 'done'), period).length,
-            disabled: filterByPeriod(tasks.filter((t) => t.status === 'done'), period).length === 0,
         },
     ]
 
-    // Auto-select valid status if current status becomes disabled
-    useEffect(() => {
-        const currentSelectedStatus = statusOptions.find((s) => s.value === status)
-        if (currentSelectedStatus?.disabled) {
-            const firstAvailable = statusOptions.find((s) => !s.disabled)
-            if (firstAvailable) {
-                setStatus(firstAvailable.value)
-            }
-        }
-    }, [period, tasks, updates])
-
-    // Auto-select valid period if current period becomes disabled
-    useEffect(() => {
-        const currentSelectedPeriod = periodOptions.find((p) => p.value === period)
-        if (currentSelectedPeriod?.disabled) {
-            const firstAvailable = periodOptions.find((p) => !p.disabled)
-            if (firstAvailable) {
-                setPeriod(firstAvailable.value)
-            }
-        }
-    }, [status, tasks, updates])
-
-    const isCurrentCombinationEmpty = filterByPeriod(currentStatusItems, period).length === 0
+    const currentCount = filterByPeriod(currentStatusItems, period).length
+    const isCurrentCombinationEmpty = currentCount === 0
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -264,14 +237,39 @@ function GenerateModal({ tasks = [], updates = [], onClose }) {
                 body: { period, status },
             })
 
-            if (fnError) throw fnError
+            if (fnError) {
+                let detailedMsg = fnError.message || 'FunctionsHttpError'
+                try {
+                    if (fnError.context && typeof fnError.context.json === 'function') {
+                        const body = await fnError.context.json()
+                        if (body?.error) detailedMsg = body.error
+                    }
+                } catch {
+                    // ignore json parsing fallback
+                }
+                throw new Error(detailedMsg)
+            }
+
+            if (data?.error) {
+                throw new Error(data.error)
+            }
+
             setSummary(data.summary)
         } catch (err) {
             console.error('Generate error full:', err)
-            setError('Failed to generate summary. Please try again.')
+            setError(err.message || 'Failed to generate summary. Please try again.')
         } finally {
             setLoading(false)
         }
+    }
+
+    const [copied, setCopied] = useState(false)
+
+    function handleCopy() {
+        if (!summary) return
+        navigator.clipboard.writeText(summary)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
     }
 
     return (
@@ -280,14 +278,14 @@ function GenerateModal({ tasks = [], updates = [], onClose }) {
             onClick={onClose}
         >
             <div
-                className="relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl p-7 w-full max-w-xl max-h-[90vh] overflow-visible"
+                className="relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl p-7 w-full max-w-xl max-h-[90vh] overflow-y-auto overflow-x-visible"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-blue-600" />
-                        <h2 className="text-base font-semibold text-gray-900 dark:text-white">Generate Summary</h2>
+                        <h2 className="text-base font-semibold text-gray-900 dark:text-white">Generate Daily Activity Log</h2>
                     </div>
                     <button
                         type="button"
@@ -311,19 +309,23 @@ function GenerateModal({ tasks = [], updates = [], onClose }) {
                 {/* Form Controls */}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-4">
-                        <CustomSelect
-                            label="Target Column"
-                            value={status}
-                            onChange={setStatus}
-                            options={statusOptions}
-                        />
+                        <div className="relative z-30">
+                            <CustomSelect
+                                label="Target Column"
+                                value={status}
+                                onChange={setStatus}
+                                options={statusOptions}
+                            />
+                        </div>
 
-                        <CustomSelect
-                            label="Period"
-                            value={period}
-                            onChange={setPeriod}
-                            options={periodOptions}
-                        />
+                        <div className="relative z-20">
+                            <CustomSelect
+                                label="Period"
+                                value={period}
+                                onChange={setPeriod}
+                                options={periodOptions}
+                            />
+                        </div>
                     </div>
 
                     <button
@@ -353,10 +355,10 @@ function GenerateModal({ tasks = [], updates = [], onClose }) {
                                         d="M4 12a8 8 0 018-8v8H4z"
                                     />
                                 </svg>
-                                <span>Generating summary...</span>
+                                <span>Generating Daily Logs...</span>
                             </>
                         ) : (
-                            <span>Generate Summary</span>
+                            <span>Generate Daily Log</span>
                         )}
                     </button>
                 </form>
@@ -371,18 +373,18 @@ function GenerateModal({ tasks = [], updates = [], onClose }) {
                     <div className="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Generated Summary
+                                Generated Activity Log
                             </h3>
                             <button
                                 type="button"
-                                onClick={() => navigator.clipboard.writeText(summary)}
-                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                                onClick={handleCopy}
+                                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
                             >
-                                Copy Text
+                                {copied ? '✓ Copied!' : 'Copy Text'}
                             </button>
                         </div>
-                        <div className="bg-gray-50 dark:bg-gray-800/60 border border-gray-200/80 dark:border-gray-700/80 rounded-xl p-4 max-h-[280px] overflow-y-auto">
-                            <p className="text-sm text-gray-700 dark:text-gray-200 whitespace-pre-line leading-relaxed text-justify">
+                        <div className="bg-gray-50 dark:bg-gray-800/60 border border-gray-200/80 dark:border-gray-700/80 rounded-xl p-4 max-h-[340px] overflow-y-auto">
+                            <p className="text-sm text-gray-700 dark:text-gray-200 whitespace-pre-line leading-relaxed">
                                 {summary}
                             </p>
                         </div>
